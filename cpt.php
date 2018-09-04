@@ -243,8 +243,8 @@ class CPT {
 		$key = self::$metakeys['prLink'];
 
 		if (testPostValue($key, true)) {
-			$_POST[$key] = \esc_url_raw($_POST[$key]);
-			\update_post_meta($post_id, $key, (string) $_POST[$key]);
+			$_POST[$key] = (string) \esc_url_raw($_POST[$key]);
+			\update_post_meta($post_id, $key, $_POST[$key]);
 			return;
 		}
 
@@ -277,8 +277,8 @@ class CPT {
 		$key = self::$metakeys['prSource'];
 
 		if (testPostValue($key, true)) {
-			$_POST[$key] = \sanitize_text_field($_POST[$key]);
-			\update_post_meta($post_id, $key, (string) $_POST[$key]);
+			$_POST[$key] = (string) \sanitize_text_field($_POST[$key]);
+			\update_post_meta($post_id, $key, $_POST[$key]);
 			return;
 		}
 
