@@ -93,12 +93,14 @@ class CPT {
 	 * @return void
 	 */
 	static function rewriteRule() {
-		return;
-		\add_rewrite_rule(
-			'^' . self::$slug . '([^/]+)/?$',
-			'index.php?wpn_prs=$matches[1]',
-			'top'
-		);
+		$press_page = \get_page_by_path('press');
+		if ($press_page) {
+			\add_rewrite_rule(
+				'' . self::$slug . '/?$',
+				'index.php?page_id=' . $press_page->ID,
+				'top'
+			);
+		}
 	}
 
 	/**
