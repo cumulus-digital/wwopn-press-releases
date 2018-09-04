@@ -1,0 +1,26 @@
+.meta_prlink {
+	display: flex;
+	align-items: center;
+	font-size: 1.4em;
+	margin-top: 5px;
+}
+	.meta_prlink label,
+	.meta_prlink input {
+		flex: 0 1 auto;
+		margin-right: .5em;
+	}
+	.meta_prlink label {
+		white-space: nowrap;
+	}
+	.meta_prlink input {
+		padding: 3px 8px;
+		line-height: 100%;
+		height: 2em;
+		width: 100%;
+		outline: 0;
+		margin: 0 0 3px;
+		background-color: #fff;
+	}
+	.meta_prlink .howto {
+		
+	}
