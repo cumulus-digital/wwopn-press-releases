@@ -28,10 +28,6 @@ class CPT {
 		\add_action('edit_form_after_title', [__CLASS__, 'editor_meta_prLink'], 10, 1);
 		\add_action('save_post', [__CLASS__, 'editor_meta_prLink_save'], 10, 1);
 
-
-		\add_filter('gettext',[__CLASS__, 'editor_customEnterTitle']);
-
-
 	}
 
 	/**
@@ -249,18 +245,6 @@ class CPT {
 		}
 
 		\delete_post_meta($post_id, $key);
-	}
-
-	static function editor_customEnterTitle($input) {
-	    global $post_type;
-
-	    if(
-	    	is_admin() &&
-	    	'Enter title here' == $input &&
-	    	$post_type == PREFIX)
-	        return 'Enter the Team Member\'s Name';
-
-	    return $input;
 	}
 
 	/**
