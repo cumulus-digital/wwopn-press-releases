@@ -28,6 +28,10 @@ class CPT {
 		\add_action('edit_form_after_title', [__CLASS__, 'editor_meta_prLink'], 10, 1);
 		\add_action('save_post', [__CLASS__, 'editor_meta_prLink_save'], 10, 1);
 
+		self::$metakeys['prSource'] = '_' . PREFIX . '_meta_prsource';
+		\add_action('edit_form_after_title', [__CLASS__, 'editor_meta_prSource'], 10, 1);
+		\add_action('save_post', [__CLASS__, 'editor_meta_prSource_save'], 10, 1);
+
 	}
 
 	/**
@@ -225,7 +229,7 @@ class CPT {
 		<div class="meta_prlink">
 			<?=\wp_nonce_field($key, $key . '-nonce');?>
 			<label for="meta_prlink">External Link:</label>
-			<input type="url" name="<?=$key?>" size="30" value="<?=esc_attr($prlink)?>" id="meta_prlink" spellcheck="true" autocomplete="off" placeholder="https://&hellip;">
+			<input type="url" name="<?=$key?>" size="30" value="<?=esc_attr($prlink)?>" id="meta_prlink" spellcheck="false" autocomplete="off" placeholder="https://&hellip;">
 		</div>
 		<p class="howto">If the external link is blank, this release will have a landing page. Be sure to write an excerpt!</p>
 		<?php
@@ -240,6 +244,40 @@ class CPT {
 
 		if (testPostValue($key, true)) {
 			$_POST[$key] = \esc_url_raw($_POST[$key]);
+			\update_post_meta($post_id, $key, (string) $_POST[$key]);
+			return;
+		}
+
+		\delete_post_meta($post_id, $key);
+	}
+
+	/**
+	 * Meta box for PR link
+	 */
+	static function editor_meta_prSource($post) {
+		if ($post->post_type !== PREFIX) {
+			return;
+		}
+		$key = self::$metakeys['prSource'];
+		$prsource = \get_post_meta($post->ID, $key, true);
+		?>
+		<div class="meta_prlink">
+			<?=\wp_nonce_field($key, $key . '-nonce');?>
+			<label for="meta_prsource">Source Name:</label>
+			<input type="text" name="<?=$key?>" size="30" value="<?=esc_attr($prsource)?>" id="meta_prsource" spellcheck="true" autocomplete="off" placeholder="Politico">
+		</div>
+		<?php
+	}
+
+	static function editor_meta_prSource_save($post_id) {
+		if ( ! self::editor_meta_safeToSave()) {
+			return;
+		}
+
+		$key = self::$metakeys['prSource'];
+
+		if (testPostValue($key, true)) {
+			$_POST[$key] = \sanitize_text_field($_POST[$key]);
 			\update_post_meta($post_id, $key, (string) $_POST[$key]);
 			return;
 		}
