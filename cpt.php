@@ -24,7 +24,7 @@ class CPT {
 
 		\add_action( 'wp_ajax_autosave_wwopn_pressreleases_meta', [__CLASS__, 'editor_meta_handleAutosave']);
 
-		self::$metakeys['prLink'] = '_' . PREFIX . '_meta_prLink';
+		self::$metakeys['prLink'] = '_' . PREFIX . '_meta_prlink';
 		\add_action('edit_form_after_title', [__CLASS__, 'editor_meta_prLink'], 10, 1);
 		\add_action('save_post', [__CLASS__, 'editor_meta_prLink_save'], 10, 1);
 
