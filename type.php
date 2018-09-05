@@ -65,6 +65,11 @@ class Type {
 				'show_in_rest' => true,
 				'show_admin_column' => true,
 				'query_var' => true,
+				'capabilities' => array(
+					'assign_terms' => 'manage_options',
+					'edit_terms'   => 'god',
+					'manage_terms' => 'god',
+				)
 			)
 		);
 	}

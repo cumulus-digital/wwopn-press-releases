@@ -4,7 +4,7 @@
 * Plugin URI: github.com/cumulus-digital/wwopn-press-releases
 * GitHub Plugin URI: cumulus-digital/wwopn-press-releases
 * Description: A plugin to create and organize press releases
-* Version:  0.6
+* Version:  0.7
 * Author: Daniel Vena
 * Author URI: westwoodone.com
 * License: GPL2
@@ -35,9 +35,35 @@ function plugin_activation() {
 		);
 	}
 
+	// Create types
+	if ( ! \term_exists('release', Type::$prefix)) {
+		Type::register();
+		\wp_insert_term('Press Release', Type::$prefix, ['slug' => 'release']);
+	}
+	if ( ! \term_exists('news', Type::$prefix)) {
+		Type::register();
+		\wp_insert_term('News Item', Type::$prefix, ['slug' => 'news']);
+	}
+
+	// Create page
+	if ( ! \get_page_by_path('press')) {
+		\wp_insert_post(
+			array(
+				'ID' => 0,
+				'post_type' => 'page',
+				'post_title' => 'Press',
+				'post_name' => 'press',
+				'post_content' => 'Press releases are managed via the Press Release admin menu to the left.',
+				'post_status' => 'publish',
+				'comment_status' => 'closed',
+				'ping_status' => 'closed',
+
+			)
+		);
+	}
+
 	// Flush permalinks after activation
 	\add_action( 'admin_init', 'flush_rewrite_rules', 20 );
-
 }
 \register_activation_hook( __FILE__, __NAMESPACE__ . '\plugin_activation');
 
