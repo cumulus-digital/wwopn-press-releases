@@ -19,6 +19,7 @@ class CPT {
 		\add_filter( 'wp_insert_post_data', [__CLASS__, 'editor_stripWhitespace'], 9, 2 );
 
 		\add_filter('gutenberg_can_edit_post_type', [__CLASS__, 'editor_disableGutenberg'], 10, 2);
+		\add_filter('use_block_editor_for_post_type', [__CLASS__, 'editor_disableGutenberg'], 10, 2);
 
 		\add_action('admin_enqueue_scripts', [__CLASS__, 'editor_loadScriptsAndStyles']);
 
