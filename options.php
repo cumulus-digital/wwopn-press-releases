@@ -138,6 +138,13 @@ class Options {
 			\submit_button();
 			?>
 
+			<h3>Shortcodes:</h3>
+			<ul>
+				<li>[media-contact-name]</li>
+				<li>[media-contact-email]</li>
+				<li>[media-contact-twitter]</li>
+			</ul>
+
 		</form>
 		<?php
 	}
