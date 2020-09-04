@@ -6,7 +6,11 @@ namespace WWOPN_PRs;
 	id="post-<?php \the_ID() ?>"
 	<?php \post_class( $attr['article_class'] ) ?>
 >
-	<a href="<?php \the_permalink() ?>" title="<?php echo \esc_attr(\get_the_title()) ?>">
+    <?php if (\get_post_meta(\get_the_ID(), '_' . PREFIX . '_meta_prlink', true)): ?>
+        <a href="<?php echo \esc_url(\get_post_meta(\get_the_ID(), '_' . PREFIX . '_meta_prlink', true)) ?>" title="<?php \esc_attr(\get_the_title()) ?>" target="_blank" rel="nofollow noopener">
+    <?php else: ?>
+        <a href="<?php \the_permalink() ?>" title="<?php echo \esc_attr(\get_the_title()) ?>">
+    <?php endif ?>
 		<?php if ($attr['show_image'] && \has_post_thumbnail()): ?>
 			<figure class="featured-image">
                 <?php
@@ -21,13 +25,13 @@ namespace WWOPN_PRs;
 			<?php if ($attr['show_date'] || $attr['show_source']): ?>
 			<div class="meta">
 				<?php if ($attr['show_date']): ?>
-				<time datetime="<?php echo \get_the_date('Y-m-d', get_the_ID()) ?>">
-					<?php echo \get_the_date('F j, Y', get_the_ID())?>
+				<time datetime="<?php echo \get_the_date('Y-m-d', \get_the_ID()) ?>">
+					<?php echo \get_the_date('F j, Y', \get_the_ID())?>
 				</time>
 				<?php endif ?>
-				<?php if ($attr['show_source'] && \get_post_meta(get_the_ID(), '_' . PREFIX . '_meta_prsource', true)): ?>
+				<?php if ($attr['show_source'] && \get_post_meta(\get_the_ID(), '_' . PREFIX . '_meta_prsource', true)): ?>
 					<div class="source">
-						<?php echo \esc_html(\get_post_meta(get_the_ID(), '_' . PREFIX . '_meta_prsource', true)) ?>
+						From: <?php echo \esc_html(\get_post_meta(\get_the_ID(), '_' . PREFIX . '_meta_prsource', true)) ?>
 					</div>
 				<?php endif ?>
 			</div>
