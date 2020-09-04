@@ -138,13 +138,41 @@ class Options {
 			\submit_button();
 			?>
 
-			<h3>Shortcodes:</h3>
+			<h3>Media Contact Shortcodes:</h3>
 			<ul>
 				<li>[media-contact-name]</li>
 				<li>[media-contact-email]</li>
 				<li>[media-contact-twitter]</li>
 			</ul>
+			<h3>Press Release Shortcode:</h3>
+			<p>
+				[releases]
+			</p>
+			<p>
+				Available options:
+			</p>
+			<ul>
+				<li>type: Type of release ('release', 'news'), default: 'all'</li>
+				<li>limit:  Number of release posts to display, default 3</li>
+				<li>container_class: CSS class to apply to container, default: 'inline-archive cards'</li>
+				<li>article_class: CSS class to apply to articles, default: 'archive excerpt'</li>
+				<li>orderby: Field to order posts by, default: 'post_date'</li>
+				<li>order: Direction to order posts, default: 'DESC'</li>
+				<li>title_tag: Tag to use for post titles, default: 'h3'</li>
+				<li>show_image: Show the post image, default: false</li>
+				<li>show_date: Show the post date, default: false</li>
+				<li>show_source: Show the post 'source' field, default: false</li>
+			</ul>
+			<p>
+				Example:<br>
+				[releases type=release limit=4 title_tag=h2 show_image=true show_date=true]
+			</p>
 
+			<h3>Release Type Shortcode:</h3>
+			<p>
+				[release-archive-url type=release]<br>
+				Outputs the URL of a release type archive. Type may be 'release' or 'news'.
+			</p>
 		</form>
 		<?php
 	}
