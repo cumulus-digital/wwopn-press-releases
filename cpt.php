@@ -35,6 +35,11 @@ class CPT {
 		\add_action('edit_form_after_title', [__CLASS__, 'editor_meta_prSource'], 10, 1);
 		\add_action('save_post', [__CLASS__, 'editor_meta_prSource_save'], 10, 1);
 
+		\add_filter('jetpack_sitemap_post_types', function($post_types) {
+			$post_types[] = PREFIX;
+			return $post_types;
+		});
+
 	}
 
 	/**
