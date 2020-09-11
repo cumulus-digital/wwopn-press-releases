@@ -19,6 +19,15 @@ function shortcode_media_contact_email() {
 };
 \add_shortcode('media-contact-email', __NAMESPACE__ . '\shortcode_media_contact_email');
 
+function shortcode_media_contact_phone() {
+	if (\get_option('wpn_prs_mediacontact')) {
+		$contact = \get_option('wpn_prs_mediacontact');
+		return \esc_html($contact['mc_phone']);
+	}
+	return '';
+};
+\add_shortcode('media-contact-phone', __NAMESPACE__ . '\shortcode_media_contact_phone');
+
 function shortcode_media_contact_twitter() {
 	if (\get_option('wpn_prs_mediacontact')) {
 		$contact = \get_option('wpn_prs_mediacontact');

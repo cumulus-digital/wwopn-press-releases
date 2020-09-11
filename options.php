@@ -12,6 +12,7 @@ class Options {
 		self::$defaults = [
 			'mc_name' => '',
 			'mc_email' => '',
+			'mc_phone' => '',
 			'mc_twitter' => '',
 		];
 
@@ -21,9 +22,12 @@ class Options {
 	}
 
 	static function loadOptions() {
-		return \get_option(
-			self::$settingsName,
-			self::$defaults
+		return array_merge(
+			self::$defaults,
+			\get_option(
+				self::$settingsName,
+				self::$defaults
+			)
 		);
 	}
 
@@ -79,6 +83,19 @@ class Options {
 			PREFIX . '_options_mediacontact',
 			[
 				'label_for' => 'mc_email'
+			]
+		);
+
+		\add_settings_field( 
+			'mc_phone', 
+			__( 'Phone Number' ), 
+			function() {
+				self::renderText('mc_phone', 'tel');
+			},
+			self::$settingsName, 
+			PREFIX . '_options_mediacontact',
+			[
+				'label_for' => 'mc_phone'
 			]
 		);
 
@@ -142,6 +159,7 @@ class Options {
 			<ul>
 				<li>[media-contact-name]</li>
 				<li>[media-contact-email]</li>
+				<li>[media-contact-phone]</li>
 				<li>[media-contact-twitter]</li>
 			</ul>
 			<h3>Press Release Shortcode:</h3>
