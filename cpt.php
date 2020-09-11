@@ -322,12 +322,14 @@ class CPT {
 		$key = self::$metakeys['prLink'];
 		$prlink = \get_post_meta($post->ID, $key, true);
 		?>
-		<div class="meta_prlink">
-			<?=\wp_nonce_field($key, $key . '-nonce');?>
-			<label for="meta_prlink">External Link:</label>
-			<input type="url" name="<?=$key?>" size="30" value="<?=esc_attr($prlink)?>" id="meta_prlink" spellcheck="false" autocomplete="off" placeholder="https://&hellip;">
+		<div class="newsitem_meta-container">
+			<div class="meta_prlink">
+				<?=\wp_nonce_field($key, $key . '-nonce');?>
+				<label for="meta_prlink">External Link:</label>
+				<input type="url" name="<?=$key?>" size="30" value="<?=esc_attr($prlink)?>" id="meta_prlink" spellcheck="false" autocomplete="off" placeholder="https://&hellip;">
+			</div>
+			<p class="howto">If the external link is blank, this release will have a landing page. Be sure to write an excerpt!</p>
 		</div>
-		<p class="howto">If the external link is blank, this release will have a landing page. Be sure to write an excerpt!</p>
 		<?php
 	}
 
@@ -357,10 +359,12 @@ class CPT {
 		$key = self::$metakeys['prSource'];
 		$prsource = \get_post_meta($post->ID, $key, true);
 		?>
-		<div class="meta_prlink">
-			<?=\wp_nonce_field($key, $key . '-nonce');?>
-			<label for="meta_prsource">Source Name:</label>
-			<input type="text" name="<?=$key?>" size="30" value="<?=esc_attr($prsource)?>" id="meta_prsource" spellcheck="true" autocomplete="off" placeholder="Politico">
+		<div class="newsitem_meta-container">
+			<div class="meta_prlink">
+				<?=\wp_nonce_field($key, $key . '-nonce');?>
+				<label for="meta_prsource">Source Name:</label>
+				<input type="text" name="<?=$key?>" size="30" value="<?=esc_attr($prsource)?>" id="meta_prsource" spellcheck="true" autocomplete="off" placeholder="Politico">
+			</div>
 		</div>
 		<?php
 	}

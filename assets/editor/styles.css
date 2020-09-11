@@ -1,3 +1,7 @@
+.newsitem_meta-container {
+	display: none;
+}
+
 .meta_prlink {
 	display: flex;
 	align-items: center;

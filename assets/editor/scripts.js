@@ -5,6 +5,19 @@
 		$('#taxonomy-wpn_prs_type input:checkbox').each(function() {
 			$(this).attr('type', 'radio');
 		});
+
+		// Only show external link and source name metas for news items
+		var $current = $('#taxonomy-wpn_prs_type input:checked');
+		if ($current.parent().text().indexOf('News Items') > -1) {
+			$('.newsitem_meta-container').show();
+		}
+		$('#taxonomy-wpn_prs_type input:radio').change(function() {
+			if ($(this).parent().text().indexOf('News Items') > -1) {
+				$('.newsitem_meta-container').show();
+			} else {
+				$('.newsitem_meta-container').hide();
+			}
+		});
 	});
 
 	/**
