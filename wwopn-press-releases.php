@@ -4,7 +4,7 @@
 * Plugin URI: github.com/cumulus-digital/wwopn-press-releases
 * GitHub Plugin URI: cumulus-digital/wwopn-press-releases
 * Description: A plugin to create and organize press releases
-* Version:  0.10
+* Version:  0.11
 * Author: Daniel Vena
 * Author URI: westwoodone.com
 * License: GPL2

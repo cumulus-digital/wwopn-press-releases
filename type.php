@@ -7,7 +7,7 @@ namespace WWOPN_PRs;
 class Type {
 
 	static $prefix;
-	static $slug = 'press/type';
+	static $slug = 'press';
 
 	static function init() {
 
@@ -66,7 +66,7 @@ class Type {
 				'show_admin_column' => true,
 				'query_var' => true,
 				'capabilities' => array(
-					'assign_terms' => 'manage_options',
+					'assign_terms' => 'edit_posts',
 					'edit_terms'   => 'god',
 					'manage_terms' => 'god',
 				)

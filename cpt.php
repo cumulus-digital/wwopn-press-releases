@@ -16,6 +16,8 @@ class CPT {
 
 		\add_action('init', [__CLASS__, 'rewriteRule']);
 
+		\add_filter( 'post_type_link', [__CLASS__, 'resolvePostLink']);
+
 		\add_filter( 'wp_insert_post_data', [__CLASS__, 'editor_stripWhitespace'], 9, 2 );
 
 		\add_filter('gutenberg_can_edit_post_type', [__CLASS__, 'editor_disableGutenberg'], 10, 2);
@@ -65,11 +67,11 @@ class CPT {
 				),
 				'description'           => 'Landing pages for Press Releases.',
 				'public'                => true,
-				'capability_type'       => 'page',
+				'capability_type'       => 'post',
 				'show_in_rest'          => true,
 				'rest_base'             => 'team',
 				'rest_controller_class' => '\WP_REST_Posts_Controller',
-				'rewrite'               => array('slug' => self::$slug),
+				'rewrite'               => array('slug' => self::$slug . '/%type%/%year%/%month%/%day%', 'with_front' => true),
 				'menu_position'         => 22,
 				'menu_icon'             => 'dashicons-paperclip',
 				'hierarchical'          => false,
@@ -91,17 +93,43 @@ class CPT {
 
 	/**
 	 * Add a rewrite rule so /press/* goes to /press
+	 * and press releases are date-coded
 	 * @return void
 	 */
 	static function rewriteRule() {
-		$press_page = \get_page_by_path('press');
-		if ($press_page) {
-			\add_rewrite_rule(
-				'' . self::$slug . '/?$',
-				'index.php?page_id=' . $press_page->ID,
-				'top'
-			);
+		// year archives
+		\add_rewrite_rule(
+			'^' . self::$slug . '/([0-9]{4})/?$',
+			'index.php?post_type=' . PREFIX . '&year=$matches[1]',
+			'top'
+		);
+		\add_rewrite_rule(
+			'^' . self::$slug . '/([0-9]{4})/page/([0-9]{1,})/?$',
+			'index.php?post_type=' . PREFIX . '&year=$matches[1]&paged=$matches[2]',
+			'top'
+		);
+
+		// handles /press/release/2020/10/09/the-post-slug
+		\add_rewrite_rule(
+			'^' . self::$slug . '/([a-z]*)?/?([0-9]{4})/([0-9]{2})/([0-9]{2})/(.*)/?',
+			'index.php?post_type=' . PREFIX . '&name=$matches[5]',
+			'top'
+		);
+	}
+
+	static function resolvePostLink($post_link, $post = null) {
+		if (\get_post_type() === PREFIX) {
+			$terms = \wp_get_post_terms(\get_the_ID(), PREFIX . '_type');
+			if ($terms) {
+				$post_link = str_replace('%type%', $terms[0]->slug, $post_link);
+			} else {
+				$post_link = str_replace('%type%', '', $post_link);
+			}
+			$post_link = str_replace('%year%', \get_the_date('Y'), $post_link);
+			$post_link = str_replace('%month%', \get_the_date('m'), $post_link);
+			$post_link = str_replace('%day%', \get_the_date('d'), $post_link);
 		}
+		return $post_link;
 	}
 
 	/**
