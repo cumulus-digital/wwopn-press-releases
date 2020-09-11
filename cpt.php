@@ -17,8 +17,6 @@ class CPT {
 		\add_action('init', [__CLASS__, 'rewriteRule']);
 
 		\add_filter( 'post_type_link', [__CLASS__, 'resolvePostLink']);
-		\add_filter( 'the_permalink_rss', [__CLASS__, 'resolvePostLink']);
-		\add_filter( 'post_link', [__CLASS__, 'resolvePostLink']);
 
 		\add_filter( 'wp_insert_post_data', [__CLASS__, 'editor_stripWhitespace'], 9, 2 );
 
@@ -79,7 +77,7 @@ class CPT {
 				'rest_base'             => self::$slug,
 				'rest_controller_class' => '\WP_REST_Posts_Controller',
 				'rewrite'               => array(
-					'slug' => self::$slug . '/%type%/%year%/%month%/%day%',
+					'slug' => self::$slug . '/%release_type%/%year%/%monthnum%/%day%',
 					'with_front' => true
 				),
 				'menu_position'         => 22,
@@ -127,18 +125,74 @@ class CPT {
 		);
 	}
 
-	static function resolvePostLink($post_link, $post = null) {
-		if (\get_post_type($post) === PREFIX) {
-			$terms = \wp_get_post_terms(\get_the_ID($post), PREFIX . '_type');
-			if ($terms) {
-				$post_link = str_replace('%type%', $terms[0]->slug, $post_link);
-			} else {
-				$post_link = str_replace('%type%', '', $post_link);
+	/**
+	 * Resolve tokens in our URL structure. Sitemaps don't seem to pass the post
+	 * to the filter, so we have to be tricky about this...
+	 *
+	 * @param [type] $post_link
+	 * @param [type] $this_post
+	 * @return void
+	 */
+	static function resolvePostLink($post_link, $this_post=null) {
+		if (strpos($post_link, '%release_type%')) {
+			if ( ! $this_post) {
+				preg_match(
+					'@%release_type%/%year%/%monthnum%/%day%/(?P<slug>[^/]+)/?@i',
+					$post_link,
+					$parts
+				);
+				if ($parts && $parts['slug']) {
+					$args = array(
+						'post_type' => PREFIX,
+						'numberposts' => 1,
+						'fields' => 'ids',
+						'name' => $parts['slug'],
+					);
+					$get_post = \get_posts($args);
+					if (count($get_post)) {
+						$this_post = $get_post[0];
+					}
+				}
 			}
-			$post_link = str_replace('%year%', \get_the_date('Y', $post), $post_link);
-			$post_link = str_replace('%month%', \get_the_date('m', $post), $post_link);
-			$post_link = str_replace('%day%', \get_the_date('d', $post), $post_link);
+
+			$post_id = null;
+			if (is_object($this_post)) {
+				$post_id = $this_post->ID;
+			} else if (is_array($this_post)) {
+				$post_id = $this_post['ID'];
+			} else if (is_int($this_post)) {
+				$post_id = $this_post;
+			} else {
+				$post_id = \get_the_ID();
+			}
+
+			if ( ! $post_id) {
+				//return $post_link;
+			}
+
+			$find_replace = array(
+				'%release_type%' => null,
+				'%year%' => \get_the_date('Y', $post_id),
+				'%monthnum%' => \get_the_date('m', $post_id),
+				'%day%' => \get_the_date('d', $post_id),
+			);
+
+			$terms = \get_the_terms($post_id, Type::$prefix);
+			if ($terms && count($terms)) {
+				$find_replace['%release_type%'] = $terms[0]->slug;
+			} else {
+				// if there's no release type, get rid of the whole type section
+				unset($find_replace['%release_type%']);
+				$find_replace['%release_type%/'] = '';
+			}
+
+			$post_link = str_replace(
+				array_keys($find_replace),
+				array_values($find_replace),
+				$post_link
+			);
 		}
+
 		return $post_link;
 	}
 
@@ -160,12 +214,14 @@ class CPT {
 		\wp_enqueue_script(
 			PREFIX . '_editor_scripts',
 			\plugin_dir_url(__FILE__) . 'assets/editor/scripts.js',
-			[ 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ],
+			['jquery'], //[ 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker' ],
 			time(),
 			true
 		);
+		/*
 		\wp_enqueue_style( 'jquery-ui' );
 		\wp_enqueue_style( 'jquery-ui-datepicker', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/flick/jquery-ui.css' );
+		*/
 
 		\wp_enqueue_style( PREFIX . '_editor_styles', \plugin_dir_url(__FILE__) . 'assets/editor/styles.css' );
 	}

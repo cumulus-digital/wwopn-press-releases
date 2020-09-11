@@ -1,11 +1,11 @@
 (function($, window, undefined){
 
-	/**
-	 * Enable datepickers
-	 */
+	// Convert release types selector to radio buttons
 	$(function() {
-		$('.datepicker').datepicker();
-	})
+		$('#taxonomy-wpn_prs_type input:checkbox').each(function() {
+			$(this).attr('type', 'radio');
+		});
+	});
 
 	/**
 	 * Handle autosaving custom metafield data
