@@ -17,6 +17,7 @@ class CPT {
 		\add_action('init', [__CLASS__, 'rewriteRule']);
 
 		\add_filter( 'post_type_link', [__CLASS__, 'resolvePostLink']);
+		\add_filter( 'post_link', [__CLASS__, 'resolvePostLink']);
 
 		\add_filter( 'wp_insert_post_data', [__CLASS__, 'editor_stripWhitespace'], 9, 2 );
 
@@ -123,16 +124,16 @@ class CPT {
 	}
 
 	static function resolvePostLink($post_link, $post = null) {
-		if (\get_post_type() === PREFIX) {
-			$terms = \wp_get_post_terms(\get_the_ID(), PREFIX . '_type');
+		if (\get_post_type($post) === PREFIX) {
+			$terms = \wp_get_post_terms(\get_the_ID($post), PREFIX . '_type');
 			if ($terms) {
 				$post_link = str_replace('%type%', $terms[0]->slug, $post_link);
 			} else {
 				$post_link = str_replace('%type%', '', $post_link);
 			}
-			$post_link = str_replace('%year%', \get_the_date('Y'), $post_link);
-			$post_link = str_replace('%month%', \get_the_date('m'), $post_link);
-			$post_link = str_replace('%day%', \get_the_date('d'), $post_link);
+			$post_link = str_replace('%year%', \get_the_date('Y', $post), $post_link);
+			$post_link = str_replace('%month%', \get_the_date('m', $post), $post_link);
+			$post_link = str_replace('%day%', \get_the_date('d', $post), $post_link);
 		}
 		return $post_link;
 	}
