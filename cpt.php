@@ -17,6 +17,7 @@ class CPT {
 		\add_action('init', [__CLASS__, 'rewriteRule']);
 
 		\add_filter( 'post_type_link', [__CLASS__, 'resolvePostLink']);
+		\add_filter( 'the_permalink_rss', [__CLASS__, 'resolvePostLink']);
 		\add_filter( 'post_link', [__CLASS__, 'resolvePostLink']);
 
 		\add_filter( 'wp_insert_post_data', [__CLASS__, 'editor_stripWhitespace'], 9, 2 );
@@ -75,9 +76,12 @@ class CPT {
 				'public'                => true,
 				'capability_type'       => 'post',
 				'show_in_rest'          => true,
-				'rest_base'             => 'team',
+				'rest_base'             => self::$slug,
 				'rest_controller_class' => '\WP_REST_Posts_Controller',
-				'rewrite'               => array('slug' => self::$slug . '/%type%/%year%/%month%/%day%', 'with_front' => true),
+				'rewrite'               => array(
+					'slug' => self::$slug . '/%type%/%year%/%month%/%day%',
+					'with_front' => true
+				),
 				'menu_position'         => 22,
 				'menu_icon'             => 'dashicons-paperclip',
 				'hierarchical'          => false,
@@ -137,6 +141,7 @@ class CPT {
 		}
 		return $post_link;
 	}
+
 
 	/**
 	 * Register scripts and styles for the post editor
